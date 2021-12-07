@@ -11,6 +11,8 @@
 # include <sys/types.h> // getaddrinfo() ; getpid() ; getuid() ; setsockopt() ; recvfrom() ; sendto() ; bind() ; socket()
 # include <sys/select.h> // select()
 # include <sys/socket.h> // getaddrinfo() ; inet_ntoa() ; inet_pton() ; setsockopt() ; recvfrom() ; sendto() ; bind() ; socket()
+# include <stdio.h>
+# include <linux/icmp.h>
 # include "libft.h"
 
 typedef struct	s_env{
@@ -18,5 +20,11 @@ typedef struct	s_env{
 	char 		err;
 	char 		*dest;
 }				t_env;
+
+typedef struct 	s_icmphdr{
+	struct icmphdr 	icmp_hdr;
+	time_t			timestamp;
+	unsigned char 	padding[48];
+}			   	t_icmphdr;
 
 # endif
