@@ -53,7 +53,6 @@ void sent_request(int sock, struct sockaddr_in *addr_con, t_icmphdr icmp, u_int1
 int main(int argc, char **argv)
 {
     int 	        sock;
-    int             ttl;
     t_icmphdr 		icmp;
     struct timeval 	tv_seq_start;
     u_int16_t       pid;
@@ -62,14 +61,16 @@ int main(int argc, char **argv)
     if (argc != 2)
         return (-1);
     pid = getpid();
-    ttl = 0;
     if (resolve_ip(argv[1], &addr_con) != 0)
 		exit(1);
     sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (sock < 0)
         return (-1);
-    setsockopt(sock, SOL_IP, IP_TTL, &ttl, sizeof(ttl));
-    if (gettimeofday(&tv_seq_start, NULL) == -1) // on sort de la fonction ? Pas de probleme avec un return ; tout est free apres
-        return (-1); // gerer erreur normalement
-    sent_request(sock, &addr_con, icmp, pid, tv_seq_start);
+    for (int ttl = 1; ttl <= 3; ttl++)
+    {   
+        setsockopt(sock, SOL_IP, IP_TTL, &ttl, sizeof(ttl));
+        if (gettimeofday(&tv_seq_start, NULL) == -1) // on sort de la fonction ? Pas de probleme avec un return ; tout est free apres
+            return (-1); // gerer erreur normalement
+        sent_request(sock, &addr_con, icmp, pid, tv_seq_start);
+    }
 }
