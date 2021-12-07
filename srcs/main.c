@@ -1,5 +1,9 @@
 #include "../incs/ft_traceroute.h"
 
+void    free_env(t_env env){
+    if (env.dest) free(env.dest);
+}
+
 void    usage(int i, char c){
     if (!i && c != '\0')
         printf("ft_traceroute: invalid option -- '%c'\n\n", c);
@@ -33,8 +37,10 @@ int     main(int ac, char **av){
     manage_env(&env, av);
 	if (getuid() != 0 || env.h || env.err || ac == 1){
 	    getuid() != 0 ? printf("This program sends raw socket, you must be root or sudoers to use it.\n") : usage(env.h, env.err);
+        free_env(env);
 		return env.h ? EXIT_SUCCESS : EXIT_FAILURE;
 	}
     printf("env->dest = %s\n", env.dest);
+    free_env(env);
     return (0);
 }
