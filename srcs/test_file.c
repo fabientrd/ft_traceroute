@@ -59,6 +59,8 @@ int main(int argc, char **argv)
     u_int16_t       pid;
     struct 	sockaddr_in addr_con;
 
+    if (argc != 2)
+        return (-1);
     pid = getpid();
     ttl = 0;
     if (resolve_ip(argv[1], &addr_con) != 0)
