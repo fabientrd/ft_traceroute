@@ -38,5 +38,5 @@ typedef struct 	s_icmphdr{
 int 			resolve_ip(char *addr_host, struct sockaddr_in *addr_con);
 void    		init_env(t_env *env);
 unsigned short	checksum(void *b, int len);
-
+void 			print_bytes(void *ptr, int size);
 # endif

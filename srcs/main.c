@@ -58,12 +58,17 @@ void fill_icmp_hdr(t_env *env, t_icmphdr *icmp, time_t timestamp, int seq)
 
 void    traceroute(t_env *env, struct sockaddr_in *addr_con)
 {
-    int             i;
-    struct timeval 	tv_seq_start;
-    t_icmphdr 		icmp;
+    int                 i;
+    struct timeval 	    tv_seq_start;
+    t_icmphdr 		    icmp;
+    unsigned char       buf[128];
+    struct sockaddr_in servaddr;
+    unsigned int        size;
 
+    size = sizeof(servaddr);
+    bzero(&servaddr,sizeof(servaddr));
     i = env->ttl;
-    while (i <= 3) // pour tester. Sinon i <= MAX_HOP (30)
+    while (i <= 30) // pour tester. Sinon i <= MAX_HOP (30)
     {
         if (gettimeofday(&tv_seq_start, NULL) == -1)
             return ; // gerer erreur normalement
@@ -71,6 +76,18 @@ void    traceroute(t_env *env, struct sockaddr_in *addr_con)
         fill_icmp_hdr(env, &icmp, tv_seq_start.tv_sec, i);
         if (sendto(env->sock, &icmp, sizeof(icmp), 0, (struct sockaddr*)addr_con, sizeof(*addr_con)) <= 0)
             printf("\nPacket Sending Failed!\n");
+        i++;
+    }
+
+    // experimental
+    i = 0;
+    while (i <= 10) // 10 == arbitraire
+    {
+        ft_memset(buf, 0x0, 128);
+        if (!(recvfrom(env->sock, buf, 128, 0, (struct sockaddr *)&servaddr, &size)))
+            printf("SOUCIS SOUCIS SOUCIS\n");
+        print_bytes(buf, 128);
+        printf("\n");
         i++;
     }
 }
