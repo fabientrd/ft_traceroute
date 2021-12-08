@@ -1,4 +1,4 @@
-#include "../incs/ft_traceroute.h"
+#include "./incs/ft_traceroute.h"
 
 unsigned short checksum(void *b, int len)
 {    

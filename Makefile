@@ -17,6 +17,7 @@ COLOR = echo
 CC_FLAGS = -Wall -Werror -Wextra -g
 
 SRC = 	main.c \
+		utils.c \
 
 OBJ = $(addprefix $(OBJ_PATH), $(SRC:.c=.o))
 

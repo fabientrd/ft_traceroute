@@ -15,10 +15,16 @@
 # include <linux/icmp.h>
 # include "libft.h"
 
+# define MAX_HOP 30
+
 typedef struct	s_env{
 	int 		h;
+	int			ttl;
+	int			sock;
+	int			seq;
 	char 		err;
 	char 		*dest;
+	u_int16_t	pid;
 }				t_env;
 
 typedef struct 	s_icmphdr{
@@ -26,5 +32,11 @@ typedef struct 	s_icmphdr{
 	time_t			timestamp;
 	unsigned char 	padding[48];
 }			   	t_icmphdr;
+
+// Functions
+
+int 			resolve_ip(char *addr_host, struct sockaddr_in *addr_con);
+void    		init_env(t_env *env);
+unsigned short	checksum(void *b, int len);
 
 # endif
