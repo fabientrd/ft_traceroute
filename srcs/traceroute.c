@@ -32,7 +32,6 @@ void    traceroute(t_env *env)
         return ;
     timeout.tv_sec = 1;
     timeout.tv_usec = 0;
-    inet_pton(AF_INET, env->dest, env->ip);
     printf("ft_traceroute to %s (%s), %d hops max, 60 byte packets\n", env->dest, env->dest, MAX_HOP); // resoudre l'ip du dexieme env->dest
     while (env->ttl <= 10 /* i <= 7 */) // pour tester. Sinon i <= MAX_HOP (30)
     {  
