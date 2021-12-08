@@ -1,17 +1,5 @@
 #include "ft_traceroute.h"
 
-void print_bytes(void *ptr, int size) // pour afficher le contenu d'une zone memoire (genre la trame)
-{
-    unsigned char *p = ptr;
-    int i;
-    for (i=0; i<size; i++) {
-        if (i > 1 && i % 16 == 0)
-            printf("\n");
-        printf("%02hhX ", p[i]);
-    }
-    printf("\n");
-}
-
 unsigned short checksum(void *b, int len)
 {    
     unsigned short  *buf;
@@ -31,21 +19,13 @@ unsigned short checksum(void *b, int len)
     return result;
 }
 
-void    init_env(t_env *env){
-    env->h = 0;
-    env->err = '\0';
-    env->dest = NULL;
-    env->seq = 1;
-    env->pid = getpid();
-    env->ttl = 1;
-}
-
 int resolve_ip(char *addr_host, struct sockaddr_in *addr_con) // IP string vers IP decimale (utilisable), et hostname vers IP decimale
 {
 	struct hostent 	*host_entity;
 	
 	if ((host_entity = gethostbyname(addr_host)) == NULL) // pas le droit, mais en attendant...
 		return (-1);
+    printf("addr_host = %s\n", addr_host);
 	(*addr_con).sin_family = host_entity->h_addrtype;
 	(*addr_con).sin_port = htons(0);
 	(*addr_con).sin_addr.s_addr = *(long*)host_entity->h_addr;

@@ -10,7 +10,7 @@
 # include <sys/time.h> // gettimeofday() 
 # include <sys/types.h> // getaddrinfo() ; getpid() ; getuid() ; setsockopt() ; recvfrom() ; sendto() ; bind() ; socket()
 # include <sys/select.h> // select()
-# include <sys/socket.h> // getaddrinfo() ; inet_ntoa() ; inet_pton() ; setsockopt() ; recvfrom() ; sendto() ; bind() ; socket()
+# include <sys/socket.h> // getaddrinfo() ; inet_ntoa() ; inet_pton() ; setsockopt() ; recvfrom() ; to() ; bind() ; socket()
 # include <stdio.h>
 # include <linux/icmp.h>
 # include "libft.h"
@@ -20,10 +20,13 @@
 typedef struct	s_env{
 	int 		h;
 	int			ttl;
+	int			max;
+	int			nqueries;
 	int			sock;
 	int			seq;
 	char 		err;
 	char 		*dest;
+	void		*ip;
 	u_int16_t	pid;
 }				t_env;
 
@@ -36,7 +39,9 @@ typedef struct 	s_icmphdr{
 // Functions
 
 int 			resolve_ip(char *addr_host, struct sockaddr_in *addr_con);
-void    		init_env(t_env *env);
 unsigned short	checksum(void *b, int len);
-void 			print_bytes(void *ptr, int size);
+void    		traceroute(t_env *env);
+int		     	init_sock(t_env *env);
+int				receive(t_env *env, t_icmphdr *icmp, struct timeval tv_seq_start);
+
 # endif
