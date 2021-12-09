@@ -25,6 +25,14 @@ void    init_env(t_env *env){
     env->ttl = 1;
     env->max = 30;
     env->nqueries = 3;
+    memset(&env->hints, 0, sizeof(struct addrinfo));
+    env->hints.ai_family = AF_INET;    /* Allow IPv4 or IPv6 */
+    env->hints.ai_socktype = SOCK_RAW; /* Datagram socket */
+    env->hints.ai_flags = IPPROTO_ICMP;    /* For wildcard IP address */
+    env->hints.ai_protocol = 0;          /* Any protocol */
+    env->hints.ai_canonname = NULL;
+    env->hints.ai_addr = NULL;
+    env->hints.ai_next = NULL;
 }
 
 void    manage_env(t_env *env, char **av)

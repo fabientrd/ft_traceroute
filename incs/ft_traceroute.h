@@ -18,16 +18,17 @@
 # define MAX_HOP 30
 
 typedef struct	s_env{
-	int 		h;
-	int			ttl;
-	int			max;
-	int			nqueries;
-	int			sock;
-	int			seq;
-	char 		err;
-	char 		*dest;
-	void		*ip;
-	u_int16_t	pid;
+	int 			h;
+	int				ttl;
+	int				max;
+	int				nqueries;
+	int				sock;
+	int				seq;
+	char 			err;
+	char 			*dest;
+	char			*ip;
+	u_int16_t		pid;
+	struct addrinfo	hints;
 }				t_env;
 
 typedef struct 	s_icmphdr{
@@ -41,7 +42,7 @@ typedef struct 	s_icmphdr{
 int 			resolve_ip(char *addr_host, struct sockaddr_in *addr_con);
 unsigned short	checksum(void *b, int len);
 void    		traceroute(t_env *env);
-int		     	init_sock(t_env *env);
+int			    init_sock(t_env *env, struct sockaddr_in *src);
 int				receive(t_env *env, t_icmphdr *icmp, struct timeval tv_seq_start);
 
 # endif
