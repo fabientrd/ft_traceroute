@@ -19,15 +19,19 @@ unsigned short checksum(void *b, int len)
     return result;
 }
 
-int resolve_ip(char *addr_host, struct sockaddr_in *addr_con) // IP string vers IP decimale (utilisable), et hostname vers IP decimale
-{
-	struct hostent 	*host_entity;
+// int resolve_ip(char *addr_host, struct sockaddr_in *addr_con) // IP string vers IP decimale (utilisable), et hostname vers IP decimale
+// {
+// 	struct hostent 	*host_entity;
 	
-	if ((host_entity = gethostbyname(addr_host)) == NULL) // pas le droit, mais en attendant...
-		return (-1);
-    printf("addr_host = %s\n", addr_host);
-	(*addr_con).sin_family = host_entity->h_addrtype;
-	(*addr_con).sin_port = htons(0);
-	(*addr_con).sin_addr.s_addr = *(long*)host_entity->h_addr;
-	return (1);
-}
+// 	if ((host_entity = gethostbyname(addr_host)) == NULL) // pas le droit, mais en attendant...
+// 		return (-1);
+//     printf("LES VALEURS DE RESOLVE IP AVEC GETHOSTBYNAME (interdite)\n\n");
+//     printf("addr_host = %s\n", addr_host);
+//     printf("addr_con.siin family = %d\n", host_entity->h_addrtype);
+//     printf("addr_con.sin port = %d\n", htons(0));
+//     printf("addr_con.siin family = %ld\n\n", *(long*)host_entity->h_addr);
+// 	(*addr_con).sin_family = host_entity->h_addrtype;
+// 	(*addr_con).sin_port = htons(0);
+// 	(*addr_con).sin_addr.s_addr = *(long*)host_entity->h_addr;
+// 	return (1);
+// }
