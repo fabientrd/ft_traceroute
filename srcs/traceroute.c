@@ -9,7 +9,7 @@ int     init_traceroute(t_env *env, struct sockaddr_in *src)
     result = getaddrinfo(env->dest, NULL, &env->hints, &addr);
     if (result != 0) {
         printf("Error from getaddrinfo: %s\n", gai_strerror(result));
-        return 1;
+        return (-1);
     }
     res = (struct sockaddr_in *)addr->ai_addr;
     (*src) = (*res);
@@ -40,7 +40,7 @@ void    traceroute(t_env *env)
     t_icmphdr 		    icmp;
     int                 ret;
 
-    if (!(init_traceroute(env, &src)))
+    if (init_traceroute(env, &src) < 0)
         return ;
     timeout.tv_sec = 1;
     timeout.tv_usec = 0;

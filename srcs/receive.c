@@ -37,7 +37,7 @@ int     receive(t_env *env, t_icmphdr *icmp, struct timeval tv_seq_start){
     s = getnameinfo((struct sockaddr *)&recv, recv_len, host, NI_MAXHOST, service, NI_MAXSERV, NI_NUMERICSERV);
     if (s == 0)
     {
-        printf("%d %s (%s)\n", env->ttl, host, inet_ntoa(buf->ip_hdr.ip_src));
+        printf(" %d  %s (%s)\n", env->ttl, host, inet_ntoa(buf->ip_hdr.ip_src));
         if (ft_strcmp(inet_ntoa(buf->ip_hdr.ip_src), env->ip) == 0x0) // si on a atteint l'ip dest on quitte
         {
             free(buf); 
