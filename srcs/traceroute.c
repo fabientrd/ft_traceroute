@@ -38,6 +38,7 @@ void    traceroute(t_env *env)
     struct timeval 	    timeout;
     struct timeval 	    tv_seq_start;
     t_icmphdr 		    icmp;
+    int                 ret;
 
     if (!(init_traceroute(env, &src)))
         return ;
@@ -54,7 +55,9 @@ void    traceroute(t_env *env)
         if (sendto(env->sock, &icmp, sizeof(icmp), 0, (struct sockaddr*)&src, sizeof(src)) <= 0)
             printf("\nPacket Sending Failed!\n");
         // JE M'OCCUPE DE LA RECEPTION DEMAIN OU CE SOIR POUR METTRE UNE CONDITION D'ARRET DANS LA BOUCLE ET PRINT LES DONNEES
-        receive(env, &icmp, tv_seq_start);
+        ret = receive(env, &icmp, tv_seq_start);
+        if (ret == 2)
+            break;
         env->ttl++;
     }
 }

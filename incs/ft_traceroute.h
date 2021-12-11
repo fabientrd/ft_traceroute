@@ -1,18 +1,22 @@
 #ifndef FT_TRACEROUTE_H
 # define FT_TRACEROUTE_H
 
-# include <arpa/inet.h> // inet_ntoa() ; inet_pton() ; htons() ; ntohs()
-# include <netdb.h> // getaddrinfo()
-# include <netinet/in.h> // inet_ntoa() ; inet_pton()
-# include <unistd.h> // getpid() ; getuid()
-# include <stdio.h> // printf()
-# include <stdlib.h> // exit()
-# include <sys/time.h> // gettimeofday() 
-# include <sys/types.h> // getaddrinfo() ; getpid() ; getuid() ; setsockopt() ; recvfrom() ; sendto() ; bind() ; socket()
-# include <sys/select.h> // select()
-# include <sys/socket.h> // getaddrinfo() ; inet_ntoa() ; inet_pton() ; setsockopt() ; recvfrom() ; sendto() ; bind() ; socket()
-# include <stdio.h>
-# include <linux/icmp.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#include <netinet/ip_icmp.h>
+#include <time.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <errno.h>
+#include <time.h>
+#include <sys/time.h>
 # include "libft.h"
 
 # define MAX_HOP 30
@@ -36,6 +40,11 @@ typedef struct 	s_icmphdr{
 	time_t			timestamp;
 	unsigned char 	padding[48];
 }			   	t_icmphdr;
+
+typedef struct 	s_rcvmem{
+	struct ip 		ip_hdr;
+	struct icmphdr 	icmp_hdr;
+}				t_rcvmem;
 
 // Functions
 
