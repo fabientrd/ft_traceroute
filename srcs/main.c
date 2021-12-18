@@ -35,17 +35,28 @@ void    init_env(t_env *env){
     env->hints.ai_next = NULL;
 }
 
-void    manage_env(t_env *env, char **av)
+void    manage_env(t_env *env, char **av, int ac)
 {
     for (int i = 1; av[i] != NULL; i++){
         if (av[i][0] == '-'){
             for (int y = 1; av[i][y] != '\0'; y++){
-                if (av[i][y] == 'h') env->h = 1;
-                else env->err = av[i][y];
+                switch (av[i][y])
+                {
+                    case 'h':
+                        env->h = 1;
+                        break;
+                    case 'm':
+                        env->max = ft_atoi(av[i+1]);
+                        break;
+                    case 'f':
+                        env->ttl = ft_atoi(av[i+1]);
+                        break;
+                    default: env->err = av[i][y];
+                }
             }
         }
         else 
-            if (env->dest == NULL) env->dest = ft_strdup(av[i]);
+            if (env->dest == NULL) env->dest = ft_strdup(av[ac-1]);
     }
 }
 
@@ -58,7 +69,7 @@ int     main(int ac, char **av)
     t_env               env;
 
     init_env(&env);
-    manage_env(&env, av);
+    manage_env(&env, av, ac);
 	if (getuid() != 0 || env.h || env.err || ac == 1){
 	    getuid() != 0 ? printf("This program sends raw socket, you must be root or sudoers to use it.\n") : usage(env.h, env.err);
         free_env(env);

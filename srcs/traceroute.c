@@ -45,7 +45,7 @@ void    traceroute(t_env *env)
     timeout.tv_sec = 1;
     timeout.tv_usec = 0;
     printf("ft_traceroute to %s (%s), %d hops max, 60 byte packets\n", env->dest, env->ip, MAX_HOP); // resoudre l'ip du dexieme env->dest
-    while (env->ttl <= env->max /* i <= 7 */)
+    while (env->ttl <= env->max)
     {  
         if (gettimeofday(&tv_seq_start, NULL) == -1)
             return ;
@@ -54,7 +54,6 @@ void    traceroute(t_env *env)
         fill_icmp_hdr(env, &icmp, tv_seq_start.tv_sec, env->ttl);
         if (sendto(env->sock, &icmp, sizeof(icmp), 0, (struct sockaddr*)&src, sizeof(src)) <= 0)
             printf("\nPacket Sending Failed!\n");
-        // JE M'OCCUPE DE LA RECEPTION DEMAIN OU CE SOIR POUR METTRE UNE CONDITION D'ARRET DANS LA BOUCLE ET PRINT LES DONNEES
         ret = receive(env, &icmp, tv_seq_start);
         if (ret == 2)
             break;
