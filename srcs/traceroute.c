@@ -6,10 +6,12 @@ int     init_traceroute(t_env *env, struct sockaddr_in *src)
     struct addrinfo *addr;
     int result;
     
+    addr = NULL;
+    res = NULL;
     result = getaddrinfo(env->dest, NULL, &env->hints, &addr);
     if (result != 0) {
-         printf("Error from getaddrinfo: %s\n", gai_strerror(result));
-         freeaddrinfo(addr);
+        printf("Error from getaddrinfo: %s\n", gai_strerror(result));
+        freeaddrinfo(addr);
         return (-1);
     }
     res = (struct sockaddr_in *)addr->ai_addr;
