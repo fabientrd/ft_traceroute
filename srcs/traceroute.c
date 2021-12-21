@@ -8,16 +8,18 @@ int     init_traceroute(t_env *env, struct sockaddr_in *src)
     
     result = getaddrinfo(env->dest, NULL, &env->hints, &addr);
     if (result != 0) {
-        printf("Error from getaddrinfo: %s\n", gai_strerror(result));
+         printf("Error from getaddrinfo: %s\n", gai_strerror(result));
+         freeaddrinfo(addr);
         return (-1);
     }
     res = (struct sockaddr_in *)addr->ai_addr;
     (*src) = (*res);
     env->ip = ft_strsub(inet_ntoa(src->sin_addr), 0, ft_strlen(inet_ntoa(src->sin_addr)));
-    if ((env->sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0)
+    if ((env->sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0){
+        freeaddrinfo(addr);
         return (-1);
-    else
-        printf("%s is at: %s\n", env->dest,inet_ntoa(src->sin_addr));
+    }   
+    freeaddrinfo(addr);
     return (1);
 }
 
@@ -34,7 +36,7 @@ void fill_icmp_hdr(t_env *env, t_icmphdr *icmp, time_t timestamp, int seq)
 
 void    traceroute(t_env *env)
 {
-    struct sockaddr_in  src/*, dest*/;
+    struct sockaddr_in  src;
     struct timeval 	    timeout;
     struct timeval 	    tv_seq_start;
     t_icmphdr 		    icmp;
@@ -42,9 +44,9 @@ void    traceroute(t_env *env)
 
     if (init_traceroute(env, &src) < 0)
         return ;
-    timeout.tv_sec = 1;
-    timeout.tv_usec = 0;
-    printf("ft_traceroute to %s (%s), %d hops max, 60 byte packets\n", env->dest, env->ip, MAX_HOP); // resoudre l'ip du dexieme env->dest
+    timeout.tv_sec = 0;
+    timeout.tv_usec = 100000;
+    printf("ft_traceroute to %s (%s), %d hops max, 60 byte packets\n", env->dest, env->ip, env->max); // resoudre l'ip du dexieme env->dest
     while (env->ttl <= env->max)
     {  
         if (gettimeofday(&tv_seq_start, NULL) == -1)
@@ -52,11 +54,17 @@ void    traceroute(t_env *env)
         setsockopt(env->sock, SOL_IP, IP_TTL, &env->ttl, sizeof(env->ttl));
         setsockopt(env->sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
         fill_icmp_hdr(env, &icmp, tv_seq_start.tv_sec, env->ttl);
-        if (sendto(env->sock, &icmp, sizeof(icmp), 0, (struct sockaddr*)&src, sizeof(src)) <= 0)
-            printf("\nPacket Sending Failed!\n");
-        ret = receive(env, &icmp, tv_seq_start);
+        if (sendto(env->sock, &icmp, sizeof(icmp), 0, (struct sockaddr*)&src, sizeof(src)) <= 0){
+            printf("connect: Permission denied\n");
+            break ;
+        }
+        ret = receive(env, tv_seq_start);
+        env->nqueries--;
+        if (env->nqueries)
+            continue ;
         if (ret == 2)
             break;
         env->ttl++;
+        env->nqueries = 3;
     }
 }

@@ -11,7 +11,9 @@
 void    usage(int i, char c){
     if (!i && c != '\0')
         printf("ft_traceroute: invalid option -- '%c'\n\n", c);
-    printf("Usage:\n  ft_traceroute [ flags ] host\nOptions:\n  -h                          print help and exit\n"
+    printf("Usage:\n  ft_traceroute [ flags ] host\nOptions:\n  -m max_ttl                  " 
+    "The max no. of hops (max time-to-live value) traceroute will probe. Default=30 hops\n"
+    "  -h                          print help and exit\n"
     "\nArguments:\n+     host          The host to traceroute to\n");
 }
 
@@ -19,6 +21,7 @@ void    init_env(t_env *env){
     env->h = 0;
     env->err = '\0';
     env->dest = NULL;
+    env->ip = NULL;
     env->sock = 0;
     env->seq = 1;
     env->pid = getpid();
@@ -61,7 +64,10 @@ void    manage_env(t_env *env, char **av, int ac)
 }
 
 void    free_env(t_env env){
-    if (env.dest) free(env.dest);
+    if (env.dest != NULL) 
+        free(env.dest);
+    if (env.ip != NULL) 
+        free(env.ip); 
 }
 
 int     main(int ac, char **av)

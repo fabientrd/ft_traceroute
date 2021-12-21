@@ -19,7 +19,6 @@
 #include <sys/time.h>
 # include "libft.h"
 
-# define MAX_HOP 30
 
 typedef struct	s_env{
 	int 			h;
@@ -52,6 +51,6 @@ int 			resolve_ip(char *addr_host, struct sockaddr_in *addr_con);
 unsigned short	checksum(void *b, int len);
 void    		traceroute(t_env *env);
 int			    init_traceroute(t_env *env, struct sockaddr_in *src);
-int				receive(t_env *env, t_icmphdr *icmp, struct timeval tv_seq_start);
+int				receive(t_env *env, struct timeval tv_seq_start);
 
 # endif
