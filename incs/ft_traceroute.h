@@ -24,7 +24,10 @@ typedef struct	s_env{
 	int 			h;
 	int				ttl;
 	int				max;
-	int				nqueries;
+	int				q;
+	double 			z;
+	int				n;
+	int				queries;
 	int				sock;
 	int				seq;
 	char 			err;
@@ -52,5 +55,6 @@ unsigned short	checksum(void *b, int len);
 void    		traceroute(t_env *env);
 int			    init_traceroute(t_env *env, struct sockaddr_in *src);
 int				receive(t_env *env, struct timeval tv_seq_start);
+void    wait_interval(int interval);
 
 # endif

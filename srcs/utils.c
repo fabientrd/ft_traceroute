@@ -1,4 +1,28 @@
 #include "ft_traceroute.h"
+int loop = 1;
+
+void handler()
+{
+	loop = 0;
+	return ;
+}
+
+void    wait_interval(int interval) // sleep() alternative
+{
+	struct timeval tv_current;
+	struct timeval tv_next;
+
+    signal(SIGINT, handler);
+	if (gettimeofday(&tv_current, NULL) < 0)
+		return ; // gerer erreur exit(42)
+	tv_next = tv_current;
+	tv_next.tv_sec += interval;
+	while ((tv_current.tv_sec < tv_next.tv_sec || tv_current.tv_usec < tv_next.tv_usec) && loop)
+	{
+		if (gettimeofday(&tv_current, NULL) < 0)
+			return ; // gerer erreur exit(42)
+	}
+}
 
 unsigned short checksum(void *b, int len)
 {    

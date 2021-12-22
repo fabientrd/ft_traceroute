@@ -11,9 +11,11 @@
 void    usage(int i, char c){
     if (!i && c != '\0')
         printf("ft_traceroute: invalid option -- '%c'\n\n", c);
-    printf("Usage:\n  ft_traceroute [ flags ] host\nOptions:\n  -m max_ttl                  " 
+    printf("Usage:\n  ft_traceroute [ flags ] host\nOptions:\n  -f first_ttl"
+    "                Start from the first_ttl hop (instead from 1)\n  -m max_ttl                  " 
     "The max no. of hops (max time-to-live value) traceroute will probe. Default=30 hops\n"
-    "  -h                          print help and exit\n"
+    "  -q nqueries                 Set the number of probes per each hop. Default is 3\n  -h"
+    "                          print help and exit\n"
     "\nArguments:\n+     host          The host to traceroute to\n");
 }
 
@@ -27,7 +29,10 @@ void    init_env(t_env *env){
     env->pid = getpid();
     env->ttl = 1;
     env->max = 30;
-    env->nqueries = 3;
+    env->q = 3;
+    env->z = 0;
+    env->n = 0;
+    env->queries = 0;
     memset(&env->hints, 0, sizeof(struct addrinfo));
     env->hints.ai_family = AF_INET;    /* Allow IPv4 or IPv6 */
     env->hints.ai_socktype = SOCK_RAW; /* Datagram socket */
@@ -47,18 +52,57 @@ int    manage_env(t_env *env, char **av, int ac)
                 {
                     case 'h':
                         env->h = 1;
-                        break;
+                        break ;
                     case 'm':
-                        env->max = ft_atoi(av[i+1]);
-                        break;
+                        env->max = ft_atoi(av[i + 1]);
+                        if (env->max == 0 && !ft_strisdigit(av[i + 1])){
+                            printf("Cannot handle `-m' option with arg `%s' (argc %d)\n", av[i + 1], i + 1);
+                            return (-1);
+                        }
+                        else if (env->max <= 0 || env->max > 255)
+                        {
+                            env->max == 0 ? printf("first hop out of range\n") : printf("max hops cannot be more than 255\n");
+                            return (-1);
+                        }
+                        break ;
                     case 'f':
-                        env->ttl = ft_atoi(av[i+1]);
+                        env->ttl = ft_atoi(av[i + 1]);
+                        if (env->ttl == 0 && !ft_strisdigit(av[i + 1])){
+                            printf("Cannot handle `-f' option with arg `%s' (argc %d)\n", av[i + 1], i + 1);
+                            return (-1);
+                        }
                         if (env->ttl <= 0)
                         {
                             printf("first hop out of range\n");
                             return (-1);
                         }
-                        break;
+                        break ;
+                    case 'q':
+                        env->q = ft_atoi(av[i + 1]);
+                        if (env->q == 0 && !ft_strisdigit(av[i + 1])){
+                            printf("Cannot handle `-q' option with arg `%s' (argc %d)\n", av[i + 1], i + 1);
+                            return (-1);
+                        }
+                        else if (env->q <= 0 || env->q > 10)
+                        {
+                            printf("no more than 10 probes per hop\n");
+                            return (-1);
+                        }
+                        break ;
+                    case 'z':
+                        env->z = ft_atoi(av[i + 1]);
+                        if (env->z == 0 && !ft_strisdigit(av[i + 1])){
+                            printf("Cannot handle `-z' option with arg `%s' (argc %d)\n", av[i + 1], i + 1);
+                            return (-1);
+                        }
+                        else if (env->z < 0){
+                            printf("bad sendtime `%s' specified\n", av[i + 1]);
+                            return (-1);
+                        }
+                        break ;
+                    case 'n':
+                        env->n = 1;
+                        break ;
                     default: env->err = av[i][y];
                 }
             }

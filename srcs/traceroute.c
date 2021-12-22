@@ -51,6 +51,7 @@ void    traceroute(t_env *env)
     printf("ft_traceroute to %s (%s), %d hops max, 60 byte packets\n", env->dest, env->ip, env->max); // resoudre l'ip du dexieme env->dest
     while (env->ttl <= env->max)
     {  
+        // IMPLEMENTER LE -z APRES MANGER
         if (gettimeofday(&tv_seq_start, NULL) == -1)
             return ;
         setsockopt(env->sock, SOL_IP, IP_TTL, &env->ttl, sizeof(env->ttl));
@@ -61,12 +62,12 @@ void    traceroute(t_env *env)
             break ;
         }
         ret = receive(env, tv_seq_start);
-        env->nqueries--;
-        if (env->nqueries)
+        env->queries++;
+        if (env->queries != env->q)
             continue ;
         if (ret == 2)
             break;
         env->ttl++;
-        env->nqueries = 3;
+        env->queries = 0;
     }
 }
