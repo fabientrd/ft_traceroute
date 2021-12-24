@@ -14,6 +14,7 @@ void    usage(int i, char c){
     printf("Usage:\n  ft_traceroute [ flags ] host\nOptions:\n  -f first_ttl"
     "                Start from the first_ttl hop (instead from 1)\n  -m max_ttl                  " 
     "The max no. of hops (max time-to-live value) traceroute will probe. Default=30 hops\n"
+    "  -n                          Do not resolve IP addresses to their domain names\n"
     "  -q nqueries                 Set the number of probes per each hop. Default is 3\n  -h"
     "                          print help and exit\n"
     "\nArguments:\n+     host          The host to traceroute to\n");
