@@ -46,8 +46,8 @@ void    traceroute(t_env *env)
 
     if (init_traceroute(env, &src) < 0)
         return ;
-    timeout.tv_sec = 0;
-    timeout.tv_usec = 100000;
+    timeout.tv_sec = 1;
+    timeout.tv_usec = 0;
     printf("ft_traceroute to %s (%s), %d hops max, 60 byte packets\n", env->dest, env->ip, env->max); // resoudre l'ip du dexieme env->dest
     while (env->ttl <= env->max)
     {  
