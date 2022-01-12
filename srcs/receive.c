@@ -1,5 +1,6 @@
 #include "../incs/ft_traceroute.h"
 
+
 int     receive(t_env *env, struct timeval tv_seq_start){
     struct timeval      tv;
     double              spent_time;
@@ -16,6 +17,16 @@ int     receive(t_env *env, struct timeval tv_seq_start){
     ft_bzero((void*)buf, sizeof(t_rcvmem));
     if ((nread = recvfrom(env->sock, buf, sizeof(t_rcvmem), 0, (struct sockaddr*)&recv, &recv_len)) <= 0 || (gettimeofday(&tv, NULL) == -1))
     {
+        if (errno == 11){
+            free_env(*env);
+            env->dest = ft_strsub(OWN_IP, 0, ft_strlen(OWN_IP));
+            env->badhost = 1;
+            traceroute(env);
+            free(buf);
+            free_env(*env);
+            exit(0);
+        }
+        printf("errno reel = %d\n", errno);
         free(buf);
         if (env->ttl < 10) printf(" "); 
         if (env->z){
@@ -36,16 +47,15 @@ int     receive(t_env *env, struct timeval tv_seq_start){
         }
         if (!env->n)    env->queries == 0 ? printf("%d  %s (%s) %.3f ms", env->ttl, host, inet_ntoa(buf->ip_hdr.ip_src), spent_time) : printf(" %.3f ms", spent_time);
         else env->queries == 0 ? printf("%d  %s %.3f ms", env->ttl, inet_ntoa(buf->ip_hdr.ip_src), spent_time) : printf(" %.3f ms", spent_time);
+        if (env->badhost)   printf(" !H");
         if (env->queries == env->q - 1)
             printf("\n");
-        if (ft_strcmp(inet_ntoa(buf->ip_hdr.ip_src), env->ip) == 0x0) // si on a atteint l'ip dest on quitte
+        if (ft_strcmp(inet_ntoa(buf->ip_hdr.ip_src), env->ip) == 0x0)
         {
             free(buf); 
             return (2);
         }
     }
-    else
-        printf("error a fixer\n");
     free(buf);
     return (0);
 }

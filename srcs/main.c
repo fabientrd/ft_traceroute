@@ -33,6 +33,7 @@ void    init_env(t_env *env){
     env->q = 3;
     env->z = 0;
     env->n = 0;
+    env->badhost = 0;
     env->queries = 0;
     memset(&env->hints, 0, sizeof(struct addrinfo));
     env->hints.ai_family = AF_INET;    /* Allow IPv4 or IPv6 */
