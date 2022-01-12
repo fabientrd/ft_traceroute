@@ -26,7 +26,6 @@ int     receive(t_env *env, struct timeval tv_seq_start){
             free_env(*env);
             exit(0);
         }
-        printf("errno reel = %d\n", errno);
         free(buf);
         if (env->ttl < 10) printf(" "); 
         if (env->z){
