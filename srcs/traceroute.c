@@ -10,7 +10,7 @@ int     init_traceroute(t_env *env, struct sockaddr_in *src)
     res = NULL;
     result = getaddrinfo(env->dest, NULL, &env->hints, &addr);
     if (result != 0) {
-        printf("Error from getaddrinfo: %s\n", error_addrinfo(result)); // FAIRE UNE FONCTION QUI CHECK LES RETOURS D'ERREURS
+        printf("%s: Name or service not known\n", env->dest);
         freeaddrinfo(addr);
         return (-1);
     }
@@ -50,7 +50,7 @@ void    traceroute(t_env *env)
     timeout.tv_usec = 0;
     if (!(env->badhost))  printf("ft_traceroute to %s (%s), %d hops max, 60 byte packets\n", env->dest, env->ip, env->max);
     while (env->ttl <= env->max)
-    {  
+    {
         if (gettimeofday(&tv_seq_start, NULL) == -1)
             return ;
         setsockopt(env->sock, SOL_IP, IP_TTL, &env->ttl, sizeof(env->ttl));

@@ -1,14 +1,6 @@
 #include "ft_traceroute.h"
 int loop = 1;
 
-char    *error_addrinfo(int result){
-    if (result == EAI_NONAME)   return("Name or service not known");
-    else if (result == EAI_FAIL)    return("getaddrinfo failed");
-    else if (result == EAI_BADFLAGS)    return("bad flags");
-    else    return("unknown error");
-    return ("");
-}
-
 void handler()
 {
 	loop = 0;
