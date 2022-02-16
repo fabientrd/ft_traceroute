@@ -17,13 +17,13 @@ int     receive(t_env *env, struct timeval tv_seq_start){
     ft_bzero((void*)buf, sizeof(t_rcvmem));
     if ((nread = recvfrom(env->sock, buf, sizeof(t_rcvmem), 0, (struct sockaddr*)&recv, &recv_len)) <= 0 || (gettimeofday(&tv, NULL) == -1))
     {
-        if (errno == 11){
+        if (errno == 11 && (!(ft_strncmp(env->dest, "192", 3)) || !(ft_strncmp(env->dest, "172", 3)) || !(ft_strncmp(env->dest, "10.", 3)))){
             free_env(*env);
-            env->dest = ft_strsub(OWN_IP, 0, ft_strlen(OWN_IP));
+            env->dest = find_local_address();
             env->badhost = 1;
             traceroute(env);
             free(buf);
-            free_env(*env);
+            free(env->ip);
             exit(0);
         }
         free(buf);

@@ -17,7 +17,8 @@
 #include <signal.h>
 #include <errno.h>
 #include <time.h>
-#include <sys/time.h>
+# include <ifaddrs.h>
+# include <sys/time.h>
 # include "libft.h"
 
 
@@ -59,5 +60,6 @@ int			    init_traceroute(t_env *env, struct sockaddr_in *src);
 int				receive(t_env *env, struct timeval tv_seq_start);
 void    		wait_interval(int interval);
 void    		free_env(t_env env);
+char   			*find_local_address();
 
 # endif

@@ -7,6 +7,28 @@ void handler()
 	return ;
 }
 
+char    *find_local_address(){
+    struct ifaddrs *ifap, *ifa;
+	struct sockaddr_in *sa;
+    char *addr;
+
+	if (getifaddrs(&ifap) != 0){
+		perror("getifaddrs()");
+		return (NULL);
+	}
+	for (ifa = ifap; ifa != NULL; ifa = ifa->ifa_next){
+	    sa = (struct sockaddr_in *) ifa->ifa_addr;
+        addr = inet_ntoa(sa->sin_addr);
+		if (!ft_strncmp(addr, "192", 3) == 0){
+			continue ;
+		}
+
+		break ;
+	}
+	freeifaddrs(ifap);
+    return (addr);
+}
+
 void    wait_interval(int interval){
 	struct timeval tv_current;
 	struct timeval tv_next;
